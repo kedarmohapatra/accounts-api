@@ -1,10 +1,21 @@
 package com.exercise.doj.model;
 
+import javax.persistence.*;
+
+@Entity
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
+
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
+
+    @Column(nullable = false)
     private String accountNumber;
 
     public int getId() {
