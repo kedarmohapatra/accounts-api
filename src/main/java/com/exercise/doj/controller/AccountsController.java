@@ -3,6 +3,7 @@ package com.exercise.doj.controller;
 import com.exercise.doj.model.Account;
 import com.exercise.doj.repository.AccountsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +15,11 @@ import static java.util.Collections.singletonMap;
 @RequestMapping("/account-project/rest/account/json")
 public class AccountsController {
 
-    private static final String ACCOUNT_SUCCESSFULLY_ADDED = "account has been successfully added";
-    private static final String ACCOUNT_SUCCESSFULLY_DELETED = "account successfully deleted";
+    @Value("${account.created.message}")
+    private String accountCreatedMessage;
+
+    @Value("${account.deleted.message}")
+    private String accountDeletedMessage;
 
     @Autowired
     private AccountsRepository repository;
@@ -30,7 +34,7 @@ public class AccountsController {
     @ResponseBody
     public Map<String, String> createAccount(@RequestBody Account account) {
         repository.save(account);
-        return singletonMap("message",ACCOUNT_SUCCESSFULLY_ADDED);
+        return singletonMap("message",accountCreatedMessage);
     }
 
     @DeleteMapping("{id}")
@@ -38,6 +42,6 @@ public class AccountsController {
     @ResponseBody
     public Map<String, String> deleteAccount(@PathVariable Integer id){
         repository.delete(id);
-        return singletonMap("message",ACCOUNT_SUCCESSFULLY_DELETED);
+        return singletonMap("message",accountDeletedMessage);
     }
 }

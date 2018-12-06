@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,6 +39,18 @@ public class AccountsApiApplicationTests {
             "\"firstName\":\"kedar\"," +
             "\"lastName\":\"mohapatra\"" +
             "}";
+
+    @Value("${account.created.message}")
+    private String accountCreatedMessage;
+
+    @Value("${account.deleted.message}")
+    private String accountDeletedMessage;
+
+    @Value("${account.invalid.request}")
+    private String jsonRequestInvalid;
+
+    @Value("${account.invalid.id}")
+    private String accountIdInvalid;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -79,14 +92,14 @@ public class AccountsApiApplicationTests {
     public void shouldSaveAccount() throws Exception {
         mockMvc.perform(post(API_ROOT).contentType(MediaType.APPLICATION_JSON).content(USER_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message", is("account has been successfully added")));
+                .andExpect(jsonPath("$.message", is(accountCreatedMessage)));
     }
 
     @Test
     public void createShouldReturnErrorMessageForInvalidFormat() throws Exception {
         mockMvc.perform(post(API_ROOT).contentType(MediaType.APPLICATION_JSON).content(USER_JSON_INVALID))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Json request incomplete or invalid"));
+                .andExpect(content().string(jsonRequestInvalid));
     }
 
     @Test
@@ -94,13 +107,13 @@ public class AccountsApiApplicationTests {
         Account persistedAccount = repository.save(createAccount());
         mockMvc.perform(delete(API_ROOT+"/"+persistedAccount.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message", is("account successfully deleted")));
+                .andExpect(jsonPath("$.message", is(accountDeletedMessage)));
     }
 
     @Test
     public void deleteShouldReturnErrorMessgeForInvalidAccountId() throws Exception {
         mockMvc.perform(delete(API_ROOT+"/100"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Account not found"));
+                .andExpect(content().string(accountIdInvalid));
     }
 }
