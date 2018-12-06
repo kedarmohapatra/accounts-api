@@ -47,13 +47,6 @@ public class AccountsApiApplicationTests {
     @Autowired
     private AccountsRepository repository;
 
-    @Before
-    public void setUp() {
-        AccountsController accountsController = new AccountsController();
-        ReflectionTestUtils.setField(accountsController, "repository", repository);
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
-
     private Account createAccount() {
         Account account = new Account();
         account.setAccountNumber("11");
@@ -61,6 +54,13 @@ public class AccountsApiApplicationTests {
         account.setLastName("Doe");
 
         return account;
+    }
+
+    @Before
+    public void setUp() {
+        AccountsController accountsController = new AccountsController();
+        ReflectionTestUtils.setField(accountsController, "repository", repository);
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
     @Test
@@ -101,6 +101,6 @@ public class AccountsApiApplicationTests {
     public void deleteShouldReturnErrorMessgeForInvalidAccountId() throws Exception {
         mockMvc.perform(delete(API_ROOT+"/100"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("account does not exist"));
+                .andExpect(content().string("Account not found"));
     }
 }
