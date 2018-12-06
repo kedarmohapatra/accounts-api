@@ -19,8 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -84,9 +83,24 @@ public class AccountsApiApplicationTests {
     }
 
     @Test
-    public void shouldReturnErrorMessageForInvalidFormat() throws Exception {
+    public void createShouldReturnErrorMessageForInvalidFormat() throws Exception {
         mockMvc.perform(post(API_ROOT).contentType(MediaType.APPLICATION_JSON).content(USER_JSON_INVALID))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Json request incomplete or invalid"));
+    }
+
+    @Test
+    public void shouldDeleteAccountForCorrectId() throws Exception {
+        Account persistedAccount = repository.save(createAccount());
+        mockMvc.perform(delete(API_ROOT+"/"+persistedAccount.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("message", is("account successfully deleted")));
+    }
+
+    @Test
+    public void deleteShouldReturnErrorMessgeForInvalidAccountId() throws Exception {
+        mockMvc.perform(delete(API_ROOT+"/100"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("message", is("account does not exist")));
     }
 }
