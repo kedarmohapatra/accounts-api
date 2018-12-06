@@ -1,7 +1,7 @@
 package com.exercise.doj.repository;
 
-import com.exercise.doj.model.User;
+import com.exercise.doj.model.Account;
 import org.springframework.data.repository.CrudRepository;
 
-public interface AccountsRepository extends CrudRepository<User, Integer> {
+public interface AccountsRepository extends CrudRepository<Account, Integer> {
 }

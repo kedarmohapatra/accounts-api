@@ -3,7 +3,7 @@ package com.exercise.doj.model;
 import javax.persistence.*;
 
 @Entity
-public class User {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
