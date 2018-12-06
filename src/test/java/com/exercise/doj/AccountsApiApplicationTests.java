@@ -79,7 +79,7 @@ public class AccountsApiApplicationTests {
     public void shouldSaveAccount() throws Exception {
         mockMvc.perform(post(API_ROOT).contentType(MediaType.APPLICATION_JSON).content(USER_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Account has been successfully added"));
+                .andExpect(jsonPath("$.message", is("account has been successfully added")));
     }
 
     @Test
@@ -94,13 +94,13 @@ public class AccountsApiApplicationTests {
         Account persistedAccount = repository.save(createAccount());
         mockMvc.perform(delete(API_ROOT+"/"+persistedAccount.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("message", is("account successfully deleted")));
+                .andExpect(jsonPath("$.message", is("account successfully deleted")));
     }
 
     @Test
     public void deleteShouldReturnErrorMessgeForInvalidAccountId() throws Exception {
         mockMvc.perform(delete(API_ROOT+"/100"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("message", is("account does not exist")));
+                .andExpect(content().string("account does not exist"));
     }
 }

@@ -6,11 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
+import static java.util.Collections.singletonMap;
+
 @RestController
 @RequestMapping("/account-project/rest/account/json")
 public class AccountsController {
 
-    public static final String ACCOUNT_SUCCESSFULLY_ADDED = "Account has been successfully added";
+    private static final String ACCOUNT_SUCCESSFULLY_ADDED = "account has been successfully added";
+    private static final String ACCOUNT_SUCCESSFULLY_DELETED = "account successfully deleted";
 
     @Autowired
     private AccountsRepository repository;
@@ -22,8 +27,17 @@ public class AccountsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public String createAccount(@RequestBody Account account) {
+    @ResponseBody
+    public Map<String, String> createAccount(@RequestBody Account account) {
         repository.save(account);
-        return ACCOUNT_SUCCESSFULLY_ADDED;
+        return singletonMap("message",ACCOUNT_SUCCESSFULLY_ADDED);
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Map<String, String> deleteAccount(@PathVariable Integer id){
+        repository.delete(id);
+        return singletonMap("message",ACCOUNT_SUCCESSFULLY_DELETED);
     }
 }
