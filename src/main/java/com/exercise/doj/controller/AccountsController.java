@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class AccountsController {
 
     public static final String ACCOUNT_SUCCESSFULLY_ADDED = "Account has been successfully added";
+
     @Autowired
     private AccountsRepository repository;
 

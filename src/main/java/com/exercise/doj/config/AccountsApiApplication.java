@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories("com.exercise.doj.repository")
 @EntityScan("com.exercise.doj.model")
 @ComponentScan("com.exercise.doj.controller")
+@ComponentScan("com.exercise.doj.exception")
 @SpringBootApplication
 public class AccountsApiApplication {
 
