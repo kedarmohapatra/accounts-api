@@ -15,6 +15,9 @@ import static java.util.Collections.singletonMap;
 @RequestMapping("/account-project/rest/account/json")
 public class AccountsController {
 
+    @Value("${account.label.message}")
+    private String message;
+
     @Value("${account.created.message}")
     private String accountCreatedMessage;
 
@@ -34,14 +37,14 @@ public class AccountsController {
     @ResponseBody
     public Map<String, String> createAccount(@RequestBody Account account) {
         repository.save(account);
-        return singletonMap("message",accountCreatedMessage);
+        return singletonMap(message, accountCreatedMessage);
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Map<String, String> deleteAccount(@PathVariable Integer id){
+    public Map<String, String> deleteAccount(@PathVariable Integer id) {
         repository.delete(id);
-        return singletonMap("message",accountDeletedMessage);
+        return singletonMap(message, accountDeletedMessage);
     }
 }

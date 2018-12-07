@@ -13,8 +13,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.ConstraintViolationException;
 
+import static java.util.Collections.singletonMap;
+
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @Value("${account.label.message}")
+    private String message;
 
     @Value("${account.invalid.request}")
     private String invalidRequest;
@@ -23,17 +28,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private String invalidId;
 
     @ExceptionHandler({ConstraintViolationException.class,
-            DataIntegrityViolationException.class })
+            DataIntegrityViolationException.class})
     public ResponseEntity<Object> handleBadRequest(
             Exception ex, WebRequest request) {
-        return handleExceptionInternal(ex, invalidRequest,
+        return handleExceptionInternal(ex, singletonMap(message, invalidRequest),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<Object> handleInvalidIdRequest(
             Exception ex, WebRequest request) {
-        return handleExceptionInternal(ex, invalidId,
+        return handleExceptionInternal(ex, singletonMap(message, invalidId),
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 }
