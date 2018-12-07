@@ -99,7 +99,7 @@ public class AccountsApiApplicationTests {
     public void createShouldReturnErrorMessageForInvalidFormat() throws Exception {
         mockMvc.perform(post(API_ROOT).contentType(MediaType.APPLICATION_JSON).content(USER_JSON_INVALID))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(jsonRequestInvalid));
+                .andExpect(jsonPath("$.message", is(jsonRequestInvalid)));
     }
 
     @Test
@@ -114,6 +114,6 @@ public class AccountsApiApplicationTests {
     public void deleteShouldReturnErrorMessgeForInvalidAccountId() throws Exception {
         mockMvc.perform(delete(API_ROOT+"/100"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(accountIdInvalid));
+                .andExpect(jsonPath("$.message", is(accountIdInvalid)));
     }
 }
